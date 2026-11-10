@@ -81,3 +81,56 @@ print("=" * 34)
 #    [ ] Run it with a total of 0 and note the error (do not fix it yet)
 #    [ ] Check every function does one job - if a function both calculates
 #        and prints, split it
+
+
+def status_of(percent):
+    """Returns the security status based on the percentage."""
+    if percent >= 100:
+        return "OVER LIMIT"
+    elif percent >= 90:
+        return "WARNING"
+    else:
+        return "OK"
+
+
+def check(value, limit):
+    """Calculates and returns the difference and percentage."""
+    difference = limit - value
+    percent = (value / limit) * 100
+    return difference, percent
+
+
+def print_report(label, value, limit, difference, percent, status):
+    """Prints the security report."""
+    print()
+    print("=" * 34)
+    print(f"  RECORD CHECK  -  {label}")
+    print("=" * 34)
+    print(f"{'Failed logins':<20}: {value:>10.2f}")
+    print(f"{'Total attempts':<20}: {limit:>10.2f}")
+    print(f"{'Difference':<20}: {difference:>+10.2f}")
+    print(f"{'Percent':<20}: {percent:>10.2f}%")
+    print(f"{'Status':<20}: {status:>10}")
+    print("=" * 34)
+
+
+over_limit_count = 0
+
+while True:
+    label = input("Enter source IP (or quit to stop): ")
+
+    if label.lower() == "quit":
+        break
+
+    value = float(input("Enter failed logins: "))
+    limit = float(input("Enter total attempts: "))
+
+    difference, percent = check(value, limit)
+    status = status_of(percent)
+
+    if status == "OVER LIMIT":
+        over_limit_count += 1
+
+    print_report(label, value, limit, difference, percent, status)
+
+print(f"Total OVER LIMIT records: {over_limit_count}")

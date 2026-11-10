@@ -67,3 +67,52 @@ for record in records:
 #    [ ] Check every method only reads/changes its OWN object (self) -
 #        nothing reaches outside itself
 #    [ ] Check every method and __init__ has a one-line docstring
+
+
+class Record:
+    over_limit_count = 0
+
+    def __init__(self, label, value, limit):
+        """Initialises a security record."""
+        self.label = label
+        self.value = value
+        self.limit = limit
+
+    def status(self):
+        """Returns the security status."""
+        percent = (self.value / self.limit) * 100
+
+        if percent >= 100:
+            Record.over_limit_count += 1
+            return "OVER LIMIT"
+        elif percent >= 90:
+            return "WARNING"
+        else:
+            return "OK"
+
+
+def load_records(path):
+    """Loads security records from a file."""
+    records = []
+
+    with open(path, "r") as file:
+        for line in file:
+            label, value, limit = line.strip().split(",")
+            records.append(Record(label, float(value), float(limit)))
+
+    return records
+
+
+records = load_records("records.txt")
+
+for record in records:
+    print()
+    print("=" * 34)
+    print(f"  RECORD CHECK - {record.label}")
+    print("=" * 34)
+    print(f"{'Failed logins':<20}: {record.value:>10.2f}")
+    print(f"{'Total attempts':<20}: {record.limit:>10.2f}")
+    print(f"{'Status':<20}: {record.status():>10}")
+    print("=" * 34)
+
+print(f"Total OVER LIMIT records: {Record.over_limit_count}")

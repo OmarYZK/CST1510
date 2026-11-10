@@ -57,3 +57,46 @@ for raw_record in raw_records:
 #    [ ] Run it with a value that will not convert to a number - write the
 #        error down
 #    [ ] Check every function does one job, with a docstring
+
+
+def parse_line(raw_line):
+    """Cleans and converts a raw security record into a dictionary."""
+    parts = raw_line.strip().split(",")
+    record = {}
+
+    for part in parts:
+        key, value = part.split("=")
+        record[key.strip().upper()] = value.strip().upper()
+
+    return {
+        "source": record["SRC"],
+        "attempts": int(record["ATTEMPTS"]),
+        "result": record["RESULT"]
+    }
+
+
+def status_of(record):
+    """Returns the security status of a record."""
+    if record["result"] == "FAILED":
+        return "FLAGGED"
+    else:
+        return "OK"
+
+
+with open("raw_records.txt", "r") as file:
+    raw_records = [line for line in file if line.strip()]
+
+flagged_count = 0
+
+for raw_record in raw_records:
+    record = parse_line(raw_record)
+    status = status_of(record)
+
+    print(record, status)
+
+    if status == "FLAGGED":
+        flagged_count += 1
+
+print()
+print(f"Total records: {len(raw_records)}")
+print(f"Flagged records: {flagged_count}")

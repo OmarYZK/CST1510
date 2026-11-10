@@ -34,8 +34,8 @@ second = 0.0    # : replace with an input() call, converted
 #
 #    Do not type the answers. Calculate them.
 
-difference = 0.0   # 
-percent = 0.0      # 
+difference = 0.0   #
+percent = 0.0      #
 
 
 # =================================================================== OUTPUT
@@ -65,3 +65,23 @@ print("=" * 34)
 #    [ ] Run it with a total of 0 and write the error in your journal
 #    [ ] Check every variable name says what it holds
 #    [ ] Show it to the person next to you
+
+
+label = input("Enter source IP: ")
+first = float(input("Enter number of failed logins: "))
+second = float(input("Enter total attempts: "))
+
+difference = second - first
+percent = (first / second) * 100
+successful_logins = second - first
+
+print()
+print("=" * 38)
+print(f"  SECURITY CHECK  -  {label}")
+print("=" * 38)
+print(f"{'Failed logins':<20}: {first:>10.2f}")
+print(f"{'Total attempts':<20}: {second:>10.2f}")
+print(f"{'Difference':<20}: {difference:>+10.2f}")
+print(f"{'Percent failed':<20}: {percent:>10.2f} %")
+print(f"{'Successful logins':<20}: {successful_logins:>10.2f}")
+print("=" * 38)

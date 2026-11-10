@@ -52,3 +52,67 @@ records = []   # replace with your code
 #    [ ] If you are loading from a file, check what happens when the file
 #        does not exist - write the error down
 #    [ ] Check every function still does one job
+
+
+def check_record(value, limit):
+    """Calculates the difference, percentage and status."""
+    difference = limit - value
+    percent = (value / limit) * 100
+
+    if percent >= 100:
+        status = "OVER LIMIT"
+    elif percent >= 90:
+        status = "WARNING"
+    else:
+        status = "OK"
+
+    return difference, percent, status
+
+
+def print_report(label, value, limit, difference, percent, status):
+    """Prints the security report."""
+    print()
+    print("=" * 34)
+    print(f"  RECORD CHECK - {label}")
+    print("=" * 34)
+    print(f"{'Failed logins':<20}: {value:>10.2f}")
+    print(f"{'Total attempts':<20}: {limit:>10.2f}")
+    print(f"{'Difference':<20}: {difference:>+10.2f}")
+    print(f"{'Percent':<20}: {percent:>10.2f}%")
+    print(f"{'Status':<20}: {status:>10}")
+    print("=" * 34)
+
+
+def load_records(path):
+    """Loads security records from a file."""
+    records = []
+    with open(path, "r") as file:
+        for line in file:
+            label, value, limit = line.strip().split(",")
+            records.append({
+                "label": label,
+                "value": float(value),
+                "limit": float(limit)
+            })
+    return records
+
+
+records = load_records("records.txt")
+
+over_limit_count = 0
+
+with open("results.txt", "w") as output:
+    for record in records:
+        label = record["label"]
+        value = record["value"]
+        limit = record["limit"]
+
+        difference, percent, status = check_record(value, limit)
+
+        if status == "OVER LIMIT":
+            over_limit_count += 1
+
+        print_report(label, value, limit, difference, percent, status)
+        output.write(f"{label}, {status}\n")
+
+print(f"Total OVER LIMIT records: {over_limit_count}")

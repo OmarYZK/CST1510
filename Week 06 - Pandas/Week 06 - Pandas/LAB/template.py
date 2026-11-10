@@ -12,6 +12,7 @@ Work through the numbered sections in order. Each one tells you what it must do.
 Delete these instructions as you replace them with your code.
 """
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 # ==================================================================== LOAD
@@ -49,3 +50,30 @@ print(df)
 #    [ ] Run it and check the percent/status columns by hand for one row
 #    [ ] Check you used & (not "and") if you combined more than one condition
 #    [ ] Check every column your code refers to actually exists - watch case
+
+
+df = pd.read_csv("security_records.csv")
+
+df["percent"] = (df["value"] / df["limit"]) * 100
+
+df["status"] = df["percent"].apply(
+    lambda x: "OVER LIMIT" if x >= 100 else "WARNING" if x >= 90 else "OK"
+)
+
+print(df)
+
+print("\nRecords requiring attention:")
+print(df[df["status"] != "OK"])
+
+print("\nStatus counts:")
+counts = df.groupby("status").size()
+print(counts)
+
+df.to_csv("security_results.csv", index=False)
+
+counts.plot(kind="bar", title="Security Status Counts")
+plt.xlabel("Status")
+plt.ylabel("Number of Records")
+plt.tight_layout()
+plt.savefig("security_chart.png")
+plt.show()

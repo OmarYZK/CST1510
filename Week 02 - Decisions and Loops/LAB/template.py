@@ -64,3 +64,41 @@ print("=" * 34)
 #    [ ] Run it three times with different numbers
 #    [ ] Run it with a total of 0 and note the error (do not fix it yet)
 #    [ ] Check every variable name says what it holds
+
+
+over_limit_count = 0
+
+while True:
+    label = input("Enter source IP (or quit to stop): ")
+
+    if label.lower() == "quit":
+        break
+
+    value = float(input("Enter failed logins: "))
+    limit = float(input("Enter total attempts: "))
+
+    difference = limit - value
+    percent = (value / limit) * 100
+
+    if percent >= 100:
+        status = "OVER LIMIT"
+    elif percent >= 90:
+        status = "WARNING"
+    else:
+        status = "OK"
+
+    if status == "OVER LIMIT":
+        over_limit_count += 1
+
+    print()
+    print("=" * 34)
+    print(f"  RECORD CHECK  -  {label}")
+    print("=" * 34)
+    print(f"{'Failed logins':<20}: {value:>10.2f}")
+    print(f"{'Total attempts':<20}: {limit:>10.2f}")
+    print(f"{'Difference':<20}: {difference:>+10.2f}")
+    print(f"{'Percent':<20}: {percent:>10.2f}%")
+    print(f"{'Status':<20}: {status:>10}")
+    print("=" * 34)
+
+print(f"Total OVER LIMIT records: {over_limit_count}")
